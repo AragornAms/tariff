@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { jsPDF } from 'jspdf';
 import {
   AdjustmentsHorizontalIcon,
   DocumentArrowDownIcon,
@@ -348,8 +349,26 @@ const TariffCalculatorPro: React.FC<{ onEmailResults?: () => void }> = ({ onEmai
   const handleExportPDF = () => {
     // Call onEmailResults if provided
     onEmailResults?.();
-    // TODO: Implement PDF export using jsPDF
-    console.log('Exporting PDF...');
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('AmCham Tariff Brief', 10, 10);
+
+    doc.setFontSize(12);
+    const lines = [
+      `Current Tariff: $${results.currentTariff.toLocaleString()}`,
+      `VAT: $${results.vat.toLocaleString()}`,
+      `Other Fees: $${results.otherFees.toLocaleString()}`,
+      `Total Landed Cost: $${results.totalLandedCost.toLocaleString()}`,
+      `Potential Savings: $${results.potentialSavings.toLocaleString()}`,
+      `Consumer Savings: $${results.consumerSavings.toLocaleString()}`,
+      `Reinvested Savings: $${results.reinvestedSavings.toLocaleString()}`,
+    ];
+
+    lines.forEach((text, index) => {
+      doc.text(text, 10, 20 + index * 10);
+    });
+
+    doc.save('amcham_brief.pdf');
   };
 
   return (

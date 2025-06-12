@@ -6,6 +6,22 @@ This repository includes a small React application along with utilities to simul
 
 Copy `.env.example` to `.env` and replace `VITE_NEWS_API_KEY` with your News API key.
 
+## Development
+
+Before running any lint or test scripts, install the project dependencies:
+
+```bash
+npm install
+```
+
+The lint and test commands rely on development packages like `vitest` and `@eslint/js`.
+Run the checks with:
+
+```bash
+npm run lint
+npm test
+```
+
 ## Consumer impact simulation
 
 The file `src/utils/consumerSimulation.js` exports a function `simulateTariffImpactOnConsumer` which models how tariff changes affect consumer prices over multiple years. An example script is provided in `scripts/consumerSimulationExample.js`.

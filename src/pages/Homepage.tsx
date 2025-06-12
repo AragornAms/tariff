@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, Newspaper, Calculator, BookOpen, Mail, Clock, ExternalLink } from 'lucide-react';
 
 interface HomepageProps {
@@ -6,44 +6,51 @@ interface HomepageProps {
   onShowNewsletter: () => void;
 }
 
+interface NewsItem {
+  id: string;
+  title: string;
+  source: string;
+  timestamp: string;
+  excerpt: string;
+  url: string;
+}
+
 const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => {
-  const newsItems = [
-    {
-      id: 1,
-      title: "US Announces New Tariff Framework for Vietnamese Textiles",
-      source: "Trade.gov",
-      timestamp: "2 hours ago",
-      excerpt: "New regulations expected to impact textile imports by 15% starting Q2 2025..."
-    },
-    {
-      id: 2,
-      title: "Vietnam Electronics Sector Responds to Tariff Changes",
-      source: "VietnamNews",
-      timestamp: "5 hours ago",
-      excerpt: "Local manufacturers adapt pricing strategies amid shifting trade policies..."
-    },
-    {
-      id: 3,
-      title: "Bilateral Trade Agreement Updates: What Importers Need to Know",
-      source: "CBP",
-      timestamp: "1 day ago",
-      excerpt: "Critical updates to documentation requirements for cross-border commerce..."
-    },
-    {
-      id: 4,
-      title: "Q4 Tariff Impact Analysis: Winners and Losers",
-      source: "TradeInsight",
-      timestamp: "2 days ago",
-      excerpt: "Comprehensive analysis of how recent tariff changes affected different sectors..."
-    },
-    {
-      id: 5,
-      title: "New HS Code Classifications for Tech Products",
-      source: "WTO",
-      timestamp: "3 days ago",
-      excerpt: "Updated harmonized system codes affect tariff calculations for tech imports..."
-    }
-  ];
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const apiKey = import.meta.env.VITE_NEWS_API_KEY;
+        const response = await fetch(
+          `https://newsapi.org/v2/everything?q=trade%20tariff&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch news');
+        }
+
+        const data = await response.json();
+        const articles = data.articles.map((a: any, index: number) => ({
+          id: a.url || String(index),
+          title: a.title,
+          source: a.source.name,
+          timestamp: new Date(a.publishedAt).toLocaleDateString(),
+          excerpt: a.description,
+          url: a.url,
+        }));
+        setNewsItems(articles);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
 
   const features = [
     {
@@ -107,7 +114,13 @@ const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => 
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {newsItems.map((item) => (
+            {loading && (
+              <p className="col-span-full text-center text-gray-500">Loading news...</p>
+            )}
+            {error && (
+              <p className="col-span-full text-center text-red-600">{error}</p>
+            )}
+            {!loading && !error && newsItems.map((item) => (
               <article
                 key={item.id}
                 className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:border-teal-200"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Newspaper, Calculator, BookOpen, Mail, Clock, ExternalLink } from 'lucide-react';
-import fetchRssNews from '../utils/fetchRssNews';
+
 
 interface HomepageProps {
   onNavigate: (page: string) => void;
@@ -18,22 +18,8 @@ interface NewsItem {
 
 const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const items = await fetchRssNews();
-        setNewsItems(items);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchNews();
   }, []);
 
   const features = [
@@ -124,10 +110,15 @@ const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => 
                 <p className="text-gray-600 mb-4 leading-relaxed">
                   {item.excerpt}
                 </p>
-                <button className="text-teal-700 font-medium text-sm hover:text-teal-800 transition-colors flex items-center group">
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-teal-700 font-medium text-sm hover:text-teal-800 transition-colors flex items-center group"
+                >
                   Read more
                   <ExternalLink className="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                </button>
+                </a>
               </article>
             ))}
           </div>

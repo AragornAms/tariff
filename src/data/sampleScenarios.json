@@ -1,0 +1,24 @@
+[
+  {
+    "id": "demo-1",
+    "name": "Electronics Import",
+    "hsCode": "8517.12",
+    "hsDescription": "Smartphones and mobile phones",
+    "fobValue": 25000,
+    "quantity": 500,
+    "shipping": 1200,
+    "insurance": 300,
+    "incoterm": "CIF"
+  },
+  {
+    "id": "demo-2",
+    "name": "Footwear Import",
+    "hsCode": "6403.91",
+    "hsDescription": "Sports footwear",
+    "fobValue": 15000,
+    "quantity": 300,
+    "shipping": 800,
+    "insurance": 150,
+    "incoterm": "FOB"
+  }
+]

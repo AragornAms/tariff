@@ -3,7 +3,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Homepage from './pages/Homepage';
 import Calculator from './pages/Calculator';
-import NewsPage from './pages/NewsPage';
+
 import NewsletterModal from './components/NewsletterModal';
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
           </div>
         );
       case 'news':
-        return <NewsPage />;
+
       default:
         return <Homepage onNavigate={setCurrentPage} onShowNewsletter={() => setShowNewsletterModal(true)} />;
     }

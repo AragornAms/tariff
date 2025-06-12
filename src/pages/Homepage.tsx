@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Newspaper, Calculator, BookOpen, Mail, Clock, ExternalLink } from 'lucide-react';
-import { fetchNews, NewsItem } from '../data/news';
+
 
 interface HomepageProps {
   onNavigate: (page: string) => void;
@@ -18,6 +18,7 @@ interface NewsItem {
 
 const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+
 
   }, []);
 

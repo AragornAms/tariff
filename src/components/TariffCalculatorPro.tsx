@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { jsPDF } from 'jspdf';
 import {
   AdjustmentsHorizontalIcon,
   DocumentArrowDownIcon,
@@ -348,8 +349,26 @@ const TariffCalculatorPro: React.FC<{ onEmailResults?: () => void }> = ({ onEmai
   const handleExportPDF = () => {
     // Call onEmailResults if provided
     onEmailResults?.();
-    // TODO: Implement PDF export using jsPDF
-    console.log('Exporting PDF...');
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('AmCham Tariff Brief', 10, 10);
+
+    doc.setFontSize(12);
+    const lines = [
+      `Current Tariff: $${results.currentTariff.toLocaleString()}`,
+      `VAT: $${results.vat.toLocaleString()}`,
+      `Other Fees: $${results.otherFees.toLocaleString()}`,
+      `Total Landed Cost: $${results.totalLandedCost.toLocaleString()}`,
+      `Potential Savings: $${results.potentialSavings.toLocaleString()}`,
+      `Consumer Savings: $${results.consumerSavings.toLocaleString()}`,
+      `Reinvested Savings: $${results.reinvestedSavings.toLocaleString()}`,
+    ];
+
+    lines.forEach((text, index) => {
+      doc.text(text, 10, 20 + index * 10);
+    });
+
+    doc.save('amcham_brief.pdf');
   };
 
   return (
@@ -366,7 +385,7 @@ const TariffCalculatorPro: React.FC<{ onEmailResults?: () => void }> = ({ onEmai
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Input Panel - 4 columns */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 fade-in">
             <InputPanel
               mode={mode}
               setMode={setMode}
@@ -392,7 +411,7 @@ const TariffCalculatorPro: React.FC<{ onEmailResults?: () => void }> = ({ onEmai
           </div>
 
           {/* Results Panel - 8 columns */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-8 fade-in">
             {/* Current Cost Summary */}
             <div className="bg-white rounded-2xl shadow-sm p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Current Cost Breakdown</h2>
@@ -437,9 +456,30 @@ const TariffCalculatorPro: React.FC<{ onEmailResults?: () => void }> = ({ onEmai
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="tariff" name="Tariff" fill="#008080" stackId="a" />
-                    <Bar dataKey="vat" name="VAT" fill="#00a0a0" stackId="a" />
-                    <Bar dataKey="otherFees" name="Other Fees" fill="#00c0c0" stackId="a" />
+                    <Bar
+                      dataKey="tariff"
+                      name="Tariff"
+                      fill="#008080"
+                      stackId="a"
+                      isAnimationActive
+                      animationDuration={800}
+                    />
+                    <Bar
+                      dataKey="vat"
+                      name="VAT"
+                      fill="#00a0a0"
+                      stackId="a"
+                      isAnimationActive
+                      animationDuration={800}
+                    />
+                    <Bar
+                      dataKey="otherFees"
+                      name="Other Fees"
+                      fill="#00c0c0"
+                      stackId="a"
+                      isAnimationActive
+                      animationDuration={800}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -536,6 +576,8 @@ const TariffCalculatorPro: React.FC<{ onEmailResults?: () => void }> = ({ onEmai
                         fill="#008080"
                         name="Total Cost"
                         radius={[4, 4, 0, 0]}
+                        isAnimationActive
+                        animationDuration={800}
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -555,6 +597,8 @@ const TariffCalculatorPro: React.FC<{ onEmailResults?: () => void }> = ({ onEmai
                         name="Consumer Savings"
                         stackId="savings"
                         radius={[4, 4, 0, 0]}
+                        isAnimationActive
+                        animationDuration={800}
                       />
                       <Bar
                         dataKey="reinvestedSavings"
@@ -562,6 +606,8 @@ const TariffCalculatorPro: React.FC<{ onEmailResults?: () => void }> = ({ onEmai
                         name="Reinvested"
                         stackId="savings"
                         radius={[4, 4, 0, 0]}
+                        isAnimationActive
+                        animationDuration={800}
                       />
                     </BarChart>
                   </ResponsiveContainer>

@@ -29,7 +29,7 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 fade-in">
       <div className="bg-white rounded-xl max-w-md w-full p-8 relative">
         <button
           onClick={onClose}

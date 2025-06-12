@@ -7,15 +7,18 @@ interface HomepageProps {
   onShowNewsletter: () => void;
 }
 
+interface NewsItem {
+  id: string;
+  title: string;
+  source: string;
+  timestamp: string;
+  excerpt: string;
+  url: string;
+}
+
 const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
 
-  useEffect(() => {
-    fetchNews(5)
-      .then(setNewsItems)
-      .catch((err) => {
-        console.error('Error fetching news', err);
-      });
   }, []);
 
   const features = [
@@ -80,7 +83,13 @@ const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => 
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {newsItems.map((item) => (
+            {loading && (
+              <p className="col-span-full text-center text-gray-500">Loading news...</p>
+            )}
+            {error && (
+              <p className="col-span-full text-center text-red-600">{error}</p>
+            )}
+            {!loading && !error && newsItems.map((item) => (
               <article
                 key={item.id}
                 className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:border-teal-200"

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Newspaper, Calculator, BookOpen, Mail, Clock, ExternalLink } from 'lucide-react';
+import { fetchNews, NewsItem } from '../data/news';
 
 interface HomepageProps {
   onNavigate: (page: string) => void;
@@ -17,39 +18,7 @@ interface NewsItem {
 
 const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const apiKey = import.meta.env.VITE_NEWS_API_KEY;
-        const response = await fetch(
-          `https://newsapi.org/v2/everything?q=trade%20tariff&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch news');
-        }
-
-        const data = await response.json();
-        const articles = data.articles.map((a: any, index: number) => ({
-          id: a.url || String(index),
-          title: a.title,
-          source: a.source.name,
-          timestamp: new Date(a.publishedAt).toLocaleDateString(),
-          excerpt: a.description,
-          url: a.url,
-        }));
-        setNewsItems(articles);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNews();
   }, []);
 
   const features = [
@@ -140,10 +109,15 @@ const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => 
                 <p className="text-gray-600 mb-4 leading-relaxed">
                   {item.excerpt}
                 </p>
-                <button className="text-teal-700 font-medium text-sm hover:text-teal-800 transition-colors flex items-center group">
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-teal-700 font-medium text-sm hover:text-teal-800 transition-colors flex items-center group"
+                >
                   Read more
                   <ExternalLink className="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                </button>
+                </a>
               </article>
             ))}
           </div>

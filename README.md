@@ -2,8 +2,6 @@
 
 This project contains a Vite + React + TypeScript application for tracking Vietnam ↔ US tariffs along with utilities for modeling tariff impacts.
 
-## Prerequisites
-
 - **Node.js ≥ 18** is required. Use an LTS version for best results.
 
 ## Installation

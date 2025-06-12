@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Newspaper, Calculator, BookOpen, Mail, Clock, ExternalLink } from 'lucide-react';
+import fetchRssNews from '../utils/fetchRssNews';
 
 interface HomepageProps {
   onNavigate: (page: string) => void;
@@ -23,25 +24,8 @@ const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => 
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const apiKey = import.meta.env.VITE_NEWS_API_KEY;
-        const response = await fetch(
-          `https://newsapi.org/v2/everything?q=trade%20tariff&sortBy=publishedAt&pageSize=5&apiKey=${apiKey}`
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch news');
-        }
-
-        const data = await response.json();
-        const articles = data.articles.map((a: any, index: number) => ({
-          id: a.url || String(index),
-          title: a.title,
-          source: a.source.name,
-          timestamp: new Date(a.publishedAt).toLocaleDateString(),
-          excerpt: a.description,
-          url: a.url,
-        }));
-        setNewsItems(articles);
+        const items = await fetchRssNews();
+        setNewsItems(items);
       } catch (err) {
         setError((err as Error).message);
       } finally {

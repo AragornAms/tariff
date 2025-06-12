@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, Newspaper, Calculator, BookOpen, Mail, Clock, ExternalLink } from 'lucide-react';
+import { fetchNews, NewsItem } from '../data/news';
 
 interface HomepageProps {
   onNavigate: (page: string) => void;
@@ -7,43 +8,15 @@ interface HomepageProps {
 }
 
 const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => {
-  const newsItems = [
-    {
-      id: 1,
-      title: "US Announces New Tariff Framework for Vietnamese Textiles",
-      source: "Trade.gov",
-      timestamp: "2 hours ago",
-      excerpt: "New regulations expected to impact textile imports by 15% starting Q2 2025..."
-    },
-    {
-      id: 2,
-      title: "Vietnam Electronics Sector Responds to Tariff Changes",
-      source: "VietnamNews",
-      timestamp: "5 hours ago",
-      excerpt: "Local manufacturers adapt pricing strategies amid shifting trade policies..."
-    },
-    {
-      id: 3,
-      title: "Bilateral Trade Agreement Updates: What Importers Need to Know",
-      source: "CBP",
-      timestamp: "1 day ago",
-      excerpt: "Critical updates to documentation requirements for cross-border commerce..."
-    },
-    {
-      id: 4,
-      title: "Q4 Tariff Impact Analysis: Winners and Losers",
-      source: "TradeInsight",
-      timestamp: "2 days ago",
-      excerpt: "Comprehensive analysis of how recent tariff changes affected different sectors..."
-    },
-    {
-      id: 5,
-      title: "New HS Code Classifications for Tech Products",
-      source: "WTO",
-      timestamp: "3 days ago",
-      excerpt: "Updated harmonized system codes affect tariff calculations for tech imports..."
-    }
-  ];
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+
+  useEffect(() => {
+    fetchNews(5)
+      .then(setNewsItems)
+      .catch((err) => {
+        console.error('Error fetching news', err);
+      });
+  }, []);
 
   const features = [
     {
@@ -127,10 +100,15 @@ const Homepage: React.FC<HomepageProps> = ({ onNavigate, onShowNewsletter }) => 
                 <p className="text-gray-600 mb-4 leading-relaxed">
                   {item.excerpt}
                 </p>
-                <button className="text-teal-700 font-medium text-sm hover:text-teal-800 transition-colors flex items-center group">
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-teal-700 font-medium text-sm hover:text-teal-800 transition-colors flex items-center group"
+                >
                   Read more
                   <ExternalLink className="ml-1 h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                </button>
+                </a>
               </article>
             ))}
           </div>
